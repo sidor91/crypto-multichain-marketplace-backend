@@ -1,0 +1,731 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_feeAddress", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_discountToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_purchaseToken",
+        "type": "address"
+      },
+      { "internalType": "address", "name": "_initialOwner", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "target", "type": "address" }
+    ],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "AddressInsufficientBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "AllowanceLess",
+    "type": "error"
+  },
+  { "inputs": [], "name": "ContractIsActive", "type": "error" },
+  { "inputs": [], "name": "ContractIsPaused", "type": "error" },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "ErrorInAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "ErrorInOrder",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "ErrorInToken",
+    "type": "error"
+  },
+  { "inputs": [], "name": "FailedInnerCall", "type": "error" },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "IncorrectAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" }
+    ],
+    "name": "OwnableInvalidOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "account", "type": "address" }
+    ],
+    "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" }
+    ],
+    "name": "SafeERC20FailedOperation",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "error", "type": "string" }],
+    "name": "TokenTransferFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "caller", "type": "address" }
+    ],
+    "name": "Unauthorized",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "requester", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "whitelistedAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenAddress",
+            "type": "address"
+          },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "initialTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "requestedTokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fulfilledToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "partiallyFillable",
+            "type": "bool"
+          },
+          { "internalType": "bool", "name": "isNFT", "type": "bool" },
+          {
+            "internalType": "enum ILinear.OrderState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ILinear.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OrderCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "requester", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "whitelistedAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenAddress",
+            "type": "address"
+          },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "initialTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "requestedTokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fulfilledToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "partiallyFillable",
+            "type": "bool"
+          },
+          { "internalType": "bool", "name": "isNFT", "type": "bool" },
+          {
+            "internalType": "enum ILinear.OrderState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ILinear.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "components": [
+          { "internalType": "address", "name": "fulfiller", "type": "address" },
+          {
+            "internalType": "uint256",
+            "name": "tokensReceived",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenFulfilled",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ILinear.Fill",
+        "name": "fill",
+        "type": "tuple"
+      }
+    ],
+    "name": "OrderFulfilled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "requester", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "whitelistedAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenAddress",
+            "type": "address"
+          },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "initialTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "requestedTokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fulfilledToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "partiallyFillable",
+            "type": "bool"
+          },
+          { "internalType": "bool", "name": "isNFT", "type": "bool" },
+          {
+            "internalType": "enum ILinear.OrderState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ILinear.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "OrderPriceUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "address", "name": "requester", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "whitelistedAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenAddress",
+            "type": "address"
+          },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "initialTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "availableTokens",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "requestedTokenAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fulfilledToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "partiallyFillable",
+            "type": "bool"
+          },
+          { "internalType": "bool", "name": "isNFT", "type": "bool" },
+          {
+            "internalType": "enum ILinear.OrderState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ILinear.Order",
+        "name": "order",
+        "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "orderId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "OrderSettled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "transferTax",
+        "type": "uint256"
+      }
+    ],
+    "name": "TransferTaxRecorded",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "BIPS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "contractState",
+    "outputs": [
+      {
+        "internalType": "enum ILinear.ContractState",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "decimalPurchaseToken",
+    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "discountThreshold",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "discountToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeAddress",
+    "outputs": [
+      { "internalType": "address payable", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeDiscountPercentage",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feePercentage",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "orderId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "proposedAmount", "type": "uint256" }
+    ],
+    "name": "fulfillOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "orderId", "type": "bytes32" }
+    ],
+    "name": "fulfillOrderForNFT",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_user", "type": "address" }
+    ],
+    "name": "getDiscountEligible",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "orders",
+    "outputs": [
+      { "internalType": "address", "name": "requester", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "whitelistedAddress",
+        "type": "address"
+      },
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "initialTokens", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "availableTokens",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestedTokenAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "fulfilledToken",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "pricePerToken", "type": "uint256" },
+      { "internalType": "bool", "name": "partiallyFillable", "type": "bool" },
+      { "internalType": "bool", "name": "isNFT", "type": "bool" },
+      {
+        "internalType": "enum ILinear.OrderState",
+        "name": "state",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pauseContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "purchaseToken",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "tokenAddress", "type": "address" },
+      {
+        "internalType": "uint256",
+        "name": "requesterTokenAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestedTokenAmount",
+        "type": "uint256"
+      },
+      { "internalType": "bool", "name": "partiallyFillable", "type": "bool" },
+      {
+        "internalType": "address",
+        "name": "whitelistedAddress",
+        "type": "address"
+      }
+    ],
+    "name": "requestOrderForERC20",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "nftContractAddress",
+        "type": "address"
+      },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "uint256", "name": "amountUSD", "type": "uint256" },
+      {
+        "internalType": "address",
+        "name": "whitelistedAddress",
+        "type": "address"
+      }
+    ],
+    "name": "requestOrderForNFT",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_discountThreshold",
+        "type": "uint256"
+      }
+    ],
+    "name": "setDiscountThreshold",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_feeAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setFeeAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_feeDiscountPercentage",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFeeDiscountPercentage",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_feePercentage", "type": "uint256" }
+    ],
+    "name": "setFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "orderId", "type": "bytes32" }
+    ],
+    "name": "settleOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "newOwner", "type": "address" }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpauseContract",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "orderId", "type": "bytes32" },
+      {
+        "internalType": "uint256",
+        "name": "newAmountForOrder",
+        "type": "uint256"
+      }
+    ],
+    "name": "updatePrice",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
